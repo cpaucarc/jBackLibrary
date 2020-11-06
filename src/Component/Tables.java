@@ -17,6 +17,10 @@ import javax.swing.table.DefaultTableCellRenderer;
  */
 public class Tables {
 
+    private static final Color MY_BLUE = new Color(38, 117, 191);
+    private static final Color MY_BLACK = new Color(47, 46, 65);
+    private static final Color MY_WHITE = new Color(255, 255, 255);
+
     public static void setModel(JTable table, TableModel tm, String[] columnNames) {
         tm.setColumnIdentifiers(columnNames);
         table.setModel(tm);
@@ -82,22 +86,22 @@ public class Tables {
         }
     }
 
-    private static void settingTable(JTable table, Color headColor, Color headTextColor, Color selectColor, Color selectTextColor, int heightRow, boolean center) {
+    private static void settingTable(JTable table, Color headColor, Color headTextColor, Color selectColor, Color selectTextColor, int heightRow, boolean center, int size) {
         //TableHead
-        table.getTableHeader().setFont(new java.awt.Font("Segoe UI", 1, 13));
+        table.getTableHeader().setFont(new java.awt.Font("Segoe UI", 1, size));
         table.getTableHeader().setBackground(headColor);
         table.getTableHeader().setForeground(headTextColor);
         table.getTableHeader().setOpaque(false);
         table.getTableHeader().setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         //Table
         table.setAutoCreateRowSorter(true);
-        table.setFont(new java.awt.Font("Segoe UI", 0, 13)); // NOI18N
-        table.setForeground(new Color(64, 69, 78));
+        table.setFont(new java.awt.Font("Segoe UI", 0, size)); // NOI18N
+        table.setForeground(MY_BLACK);
         table.setIntercellSpacing(new java.awt.Dimension(0, 0));
         table.setRowHeight(heightRow);
         table.setSelectionBackground(selectColor);
         table.setSelectionForeground(selectTextColor);
-        table.setGridColor(new java.awt.Color(255, 255, 255));
+        table.setGridColor(MY_WHITE);
         table.setShowVerticalLines(false);
         //Center table content
         if (center) {
@@ -110,31 +114,31 @@ public class Tables {
         int r = color.getRed();
         int g = color.getGreen();
         int b = color.getBlue();
-        return (r + g + b) < 400 ? Color.white : new Color(33, 29, 37);
+        return (r + g + b) < 400 ? MY_WHITE : MY_BLACK;
     }
 
     public static void Dark(JTable table) {
-        settingTable(table, new Color(64, 69, 78), new Color(255, 255, 255), new Color(0, 122, 255), new Color(255, 255, 255), 27, true);
+        settingTable(table, MY_BLACK, MY_WHITE, MY_BLUE, MY_WHITE, 27, true, 13);
     }
 
-    public static void Dark(JTable table, int height, boolean centered) {
-        settingTable(table, new Color(64, 69, 78), new Color(255, 255, 255), new Color(0, 122, 255), new Color(255, 255, 255), height, centered);
+    public static void Dark(JTable table, int height, boolean centered, int size) {
+        settingTable(table, MY_BLACK, MY_WHITE, MY_BLUE, MY_WHITE, height, centered, size);
     }
 
     public static void Light(JTable table) {
-        settingTable(table, new Color(255, 255, 255), new Color(64, 69, 78), new Color(0, 122, 255), new Color(255, 255, 255), 27, true);
+        settingTable(table, MY_WHITE, MY_BLACK, MY_BLUE, MY_WHITE, 27, true, 13);
     }
 
-    public static void Light(JTable table, int height, boolean centered) {
-        settingTable(table, new Color(255, 255, 255), new Color(64, 69, 78), new Color(0, 122, 255), new Color(255, 255, 255), height, centered);
+    public static void Light(JTable table, int height, boolean centered, int size) {
+        settingTable(table, MY_WHITE, MY_BLACK, MY_BLUE, MY_WHITE, height, centered, size);
     }
 
     public static void DarkCustom(JTable table, Color selectColor) {
-        settingTable(table, new Color(64, 69, 78), new Color(255, 255, 255), selectColor, fontColor(selectColor), 27, true);
+        settingTable(table, MY_BLACK, MY_WHITE, selectColor, fontColor(selectColor), 27, true, 13);
     }
 
-    public static void TableCustom(JTable table, Color headColor, Color headTextColor, Color selectColor, Color selectTextColor, int heightRow, boolean center) {
-        settingTable(table, headColor, headTextColor, selectColor, selectTextColor, heightRow, center);
+    public static void TableCustom(JTable table, Color headColor, Color headTextColor, Color selectColor, Color selectTextColor, int heightRow, boolean center, int size) {
+        settingTable(table, headColor, headTextColor, selectColor, selectTextColor, heightRow, center, size);
     }
 
     public static void HideColumn(JTable table, int column) {
@@ -156,7 +160,7 @@ public class Tables {
             table.getColumnModel().getColumn(column).setMinWidth(width);
             table.getTableHeader().getColumnModel().getColumn(column).setMaxWidth(width);
             table.getTableHeader().getColumnModel().getColumn(column).setMinWidth(width);
-            
+
 //            table.getColumnModel().getColumn(column).setWidth(width);
 //            table.getColumnModel().getColumn(column).setPreferredWidth(width);
         }

@@ -5,17 +5,13 @@
  */
 package Component;
 
-import javax.swing.table.DefaultTableModel;
+import javax.swing.DefaultListModel;
 
 /**
  *
  * @author Frank Paucar
+ * @param <Object>
  */
-public class TableModel extends DefaultTableModel {
-
-    @Override
-    public boolean isCellEditable(int row, int column) {
-        return column == 40;
-    }
+public class ListModel<Object> extends DefaultListModel<Object>{
     
 }
