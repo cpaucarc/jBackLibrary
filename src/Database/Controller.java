@@ -1,6 +1,7 @@
 package Database;
 
-import Component.TableModel;
+import ui.TableModel;
+import java.io.File;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -13,44 +14,49 @@ import javax.swing.JComboBox;
  *
  * @author Frank Paucar
  */
-public class Controller extends Conection{
-    
+public class Controller extends Conection {
+
     public Controller(String user, String psw, String db, String host) {
         super(user, psw, db, host);
     }
-
-    public Connection getConnection() throws NullPointerException{
+    
+    public Controller(File envFile) {
+        super(envFile);
+    }
+    
+    public Connection getConnection() {
         try {
             return this.con;
         } catch (Exception e) {
-            throw new NullPointerException("It's not connected to database");
+            return null;
         }
     }
 
-    public ResultSet ReturnRow(String sql) throws SQLException {
+    public ResultSet ReturnRow(String sql) {
         try {
             st = this.con.createStatement();
             rs = st.executeQuery(sql);
             return rs;
         } catch (SQLException e) {
-            throw new SQLException(e);
+            return null;
         }
     }
 
-    public String getData(String sql, int pos) throws SQLException {
+    public String getData(String sql, int pos) {
         try {
             rs = ReturnRow(sql);
-            if (rs.next())
+            if (rs.next()) {
                 return rs.getString(pos);
+            }
             return "No data";
         } catch (SQLException e) {
-            throw new SQLException(e);
+            return null;
         }
     }
 
-    public String[] getColumnData(String sql) throws SQLException {
+    public String[] getColumnData(String sql) {
         try {
-            List<String> dataList = new ArrayList<>();        
+            List<String> dataList = new ArrayList<>();
             rs = ReturnRow(sql);
 
             while (rs.next()) {
@@ -61,11 +67,11 @@ public class Controller extends Conection{
             dataList.toArray(data);
             return data;
         } catch (SQLException e) {
-            throw new SQLException(e);
+            return null;
         }
     }
 
-    public String[] getRowData(String sql, int num) throws SQLException {
+    public String[] getRowData(String sql, int num) {
         try {
             String[] data = new String[num];
             rs = ReturnRow(sql);
@@ -76,11 +82,11 @@ public class Controller extends Conection{
             }
             return data;
         } catch (SQLException e) {
-            throw new SQLException(e);
+            return null;
         }
     }
 
-    public ArrayList<String> getData(String sql) throws SQLException {
+    public ArrayList<String> getData(String sql) {
         try {
             ArrayList<String> data = new ArrayList<>();
             rs = ReturnRow(sql);
@@ -89,7 +95,7 @@ public class Controller extends Conection{
             }
             return data;
         } catch (SQLException e) {
-            throw new SQLException(e);
+            return null;
         }
     }
 
@@ -99,28 +105,34 @@ public class Controller extends Conection{
         }
     }
 
-    public void fillTable(TableModel model, String sql, int size) throws SQLException {
+    public void fillTable(TableModel model, String sql, int size) {
         String[] data = new String[size];
         clearTable(model);
-        rs = ReturnRow(sql);
-        while (rs.next()) {
-            for (int i = 0; i < size; i++) {
-                data[i] = rs.getString((i + 1));
+        try {
+            rs = ReturnRow(sql);
+            while (rs.next()) {
+                for (int i = 0; i < size; i++) {
+                    data[i] = rs.getString((i + 1));
+                }
+                model.addRow(data);
             }
-            model.addRow(data);
+        } catch (SQLException e) {
         }
     }
 
-    private void Sub_FillCombo(JComboBox combo, String sql, int pos) throws SQLException {
+    private void Sub_FillCombo(JComboBox combo, String sql, int pos) {
         combo.removeAllItems();
-        rs = ReturnRow(sql);
-        combo.addItem("Select...");
-        while (rs.next()) {
-            combo.addItem(rs.getString(pos));
+        try {
+            rs = ReturnRow(sql);
+            combo.addItem("Select...");
+            while (rs.next()) {
+                combo.addItem(rs.getString(pos));
+            }
+        } catch (SQLException e) {
         }
     }
 
-    public void fillCombo(JComboBox combo, String sql, int pos) throws SQLException {
+    public void fillCombo(JComboBox combo, String sql, int pos) {
         Sub_FillCombo(combo, sql, pos);
         if (combo.getItemCount() == 1) {
             combo.removeAllItems();
@@ -129,7 +141,7 @@ public class Controller extends Conection{
         combo.setSelectedIndex(0);
     }
 
-    public void fillList(DefaultListModel<String> model, String sql, int pos) throws SQLException {
+    public void fillList(DefaultListModel<String> model, String sql, int pos) {
         try {
             model.clear();
             rs = ReturnRow(sql);
@@ -137,25 +149,23 @@ public class Controller extends Conection{
                 model.addElement(rs.getString(pos));
             }
         } catch (SQLException e) {
-            throw new SQLException(e);
         }
     }
 
-    public boolean existInDB(String sql) throws SQLException{
+    public boolean existInDB(String sql){
         try {
             rs = ReturnRow(sql);
             return rs.next();
         } catch (SQLException e) {
-            throw new SQLException(e);
+            return false;
         }
     }
 
-    public void executeQuery(String sql) throws SQLException{
+    public void executeQuery(String sql){
         try {
             st = this.con.createStatement();
             st.executeUpdate(sql);
         } catch (SQLException e) {
-            throw new SQLException(e);
         }
     }
 }

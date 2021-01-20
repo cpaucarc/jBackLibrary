@@ -22,7 +22,7 @@ public class Documents {
         return new File(path).exists();
     }
 
-    public static String selectDirectory(String currentDirectory) throws HeadlessException{
+    public static String selectDirectory(String currentDirectory){
 
         try {
             chooser = new JFileChooser(new File(currentDirectory));
@@ -34,7 +34,6 @@ public class Documents {
                 return path.endsWith("\\") ? path : (path + "\\");
         }
         } catch (HeadlessException e) {
-            throw new HeadlessException("Directory not selected");
         }
         return null;
     }
@@ -52,7 +51,7 @@ public class Documents {
         return null;
     }
 
-    public static void copyFile(File src, File dest) throws IOException {
+    public static void copyFile(File src, File dest){
         InputStream input = null;
         OutputStream output = null;
         try {
@@ -64,36 +63,34 @@ public class Documents {
                 output.write(buf, 0, bytesRead);
             }
         } catch (IOException e) {
-            throw new IOException("Error while copying file");
         } finally {
-            if (input != null) {
-                input.close();
-            }
-            if (output != null) {
-                output.close();
+            try {
+                if (input != null) {
+                    input.close();
+                }
+                if (output != null) {
+                    output.close();
+                }
+            } catch (IOException iOException) {
             }
         }
     }
 
     public static boolean copy(File fileOrigin, String path) {
         File fileCopy = new File(path);
-        try {
-            if (fileCopy.exists()) {
-                int rsta = JOptionPane.showConfirmDialog(null, 
-                        "This file already exists, do you want replace it?", "Warning", 
-                        JOptionPane.OK_CANCEL_OPTION, JOptionPane.WARNING_MESSAGE);
-                if (rsta == 0) { // Replace it
-                    copyFile(fileOrigin, fileCopy);
-                    return true;
-                } else {
-                    return false;
-                }
-            } else {
+        if (fileCopy.exists()) {
+            int rsta = JOptionPane.showConfirmDialog(null,
+                    "This file already exists, do you want replace it?", "Warning",
+                    JOptionPane.OK_CANCEL_OPTION, JOptionPane.WARNING_MESSAGE);
+            if (rsta == 0) { // Replace it
                 copyFile(fileOrigin, fileCopy);
                 return true;
+            } else {
+                return false;
             }
-        } catch (IOException ex) {
-            return false;
+        } else {
+            copyFile(fileOrigin, fileCopy);
+            return true;
         }
     }
 }

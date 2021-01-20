@@ -15,7 +15,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
-package Component;
+package ui;
 
 import java.awt.Color;
 import java.awt.MouseInfo;
@@ -34,7 +34,7 @@ public class Panels {
     
     public static int x, y;
         
-    public static void MoveFrame(JPanel panel, JFrame frame) {
+    public static void moveFrame(JPanel panel, JFrame frame) {
 
         panel.addMouseListener(new MouseListener() {
             @Override public void mouseClicked(MouseEvent e) {}
